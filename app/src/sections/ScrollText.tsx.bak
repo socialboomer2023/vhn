@@ -76,9 +76,7 @@ export default function ScrollText() {
         <div className="w-1/2 overflow-hidden">
           <div
             className="flex gap-10 whitespace-nowrap"
-            ref={(el) => {
-			  leftRefs.current[0] = el
-			}}
+            ref={(el) => (leftRefs.current[0] = el)}
           >
             {leftWords.concat(leftWords).map((word, i) => (
               <h2
@@ -95,9 +93,7 @@ export default function ScrollText() {
         <div className="w-1/2 overflow-hidden">
           <div
             className="flex gap-10 whitespace-nowrap"
-            ref={(el) => {
-			rightRefs.current[0] = el
-			}}
+            ref={(el) => (rightRefs.current[0] = el)}
           >
             {rightWords.concat(rightWords).map((word, i) => (
               <h2
