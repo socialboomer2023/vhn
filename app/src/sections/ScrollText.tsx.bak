@@ -87,7 +87,7 @@ export default function ScrollText() {
 
   return (
     <section ref={sectionRef} className="relative bg-obsidian py-20 lg:py-0 lg:h-[300vh]">
-      <div className="lg:sticky lg:top-0 lg:h-screen w-full max-w-[100vw] flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-0 px-4 overflow-hidden">
+      <div className="lg:sticky lg:top-0 lg:h-screen flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-0 px-6 overflow-hidden">
         {/* Left Words */}
         <div className="flex-1 flex flex-col items-center lg:items-end lg:pr-8 z-10" style={{ perspective: 1000 }}>
           {leftWords.map((word, i) => (
