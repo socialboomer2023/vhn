@@ -41,7 +41,8 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-obsidian/60 via-obsidian/70 to-obsidian/90" />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
+      /*<div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">*/
+	  <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center" style={{ forcedColorAdjust: 'none' }}>
         <span
           ref={labelRef}
           className="font-mono text-xs tracking-[0.2em] text-silver uppercase mb-6"

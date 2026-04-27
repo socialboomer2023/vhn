@@ -36,6 +36,9 @@
   *::-webkit-scrollbar {
     display: none;
   }
+  * {
+  forced-color-adjust: none;
+  }
   html {
     scroll-behavior: auto;
   }
