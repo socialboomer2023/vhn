@@ -8,15 +8,8 @@ gsap.registerPlugin(ScrollTrigger)
 export default function Contact() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
-  const [formData, setFormData] = useState({
-    name: '',
-    company: '',
-    email: '',
-    phone: '',
-    service: '',
-    message: '',
-  })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -39,29 +32,39 @@ export default function Contact() {
     return () => ctx.revert()
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setSubmitted(true)
-	// ✅ RESET FORM DATA
-		setFormData({
-		name: '',
-		company: '',
-		email: '',
-		phone: '',
-		service: '',
-		message: '',
-	})
-    setTimeout(() => setSubmitted(false), 4000)
-  }
+    setSubmitting(true)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    const form = e.currentTarget
+    const data = new FormData(form)
+
+    try {
+      const response = await fetch('https://formspree.io/f/mnjlyqgw', {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      })
+
+      if (response.ok) {
+        setSubmitted(true)
+        form.reset()
+        setTimeout(() => setSubmitted(false), 5000)
+      } else {
+        alert('Something went wrong. Please try again or call us directly.')
+      }
+    } catch {
+      alert('Network error. Please try again or call us directly.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
     <section id="contact" ref={sectionRef} className="bg-charcoal py-24 md:py-32">
       <div className="max-w-[1280px] mx-auto px-6 lg:px-12">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+
           {/* Left: Contact Info */}
           <div className="flex-1">
             <span className="font-mono text-xs tracking-[0.2em] text-industrial-amber uppercase animate-in block">
@@ -158,8 +161,6 @@ export default function Contact() {
                         type="text"
                         name="name"
                         required
-                        value={formData.name}
-                        onChange={handleChange}
                         className="w-full bg-graphite border border-graphite text-white px-4 py-3 text-sm focus:border-industrial-amber focus:outline-none transition-colors"
                         placeholder="Your name"
                       />
@@ -169,8 +170,6 @@ export default function Contact() {
                       <input
                         type="text"
                         name="company"
-                        value={formData.company}
-                        onChange={handleChange}
                         className="w-full bg-graphite border border-graphite text-white px-4 py-3 text-sm focus:border-industrial-amber focus:outline-none transition-colors"
                         placeholder="Company name"
                       />
@@ -181,8 +180,6 @@ export default function Contact() {
                         type="email"
                         name="email"
                         required
-                        value={formData.email}
-                        onChange={handleChange}
                         className="w-full bg-graphite border border-graphite text-white px-4 py-3 text-sm focus:border-industrial-amber focus:outline-none transition-colors"
                         placeholder="email@company.com"
                       />
@@ -192,8 +189,6 @@ export default function Contact() {
                       <input
                         type="tel"
                         name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
                         className="w-full bg-graphite border border-graphite text-white px-4 py-3 text-sm focus:border-industrial-amber focus:outline-none transition-colors"
                         placeholder="(555) 000-0000"
                       />
@@ -204,8 +199,6 @@ export default function Contact() {
                     <label className="font-mono text-xs text-silver uppercase tracking-wider block mb-2">Service Type</label>
                     <select
                       name="service"
-                      value={formData.service}
-                      onChange={handleChange}
                       className="w-full bg-graphite border border-graphite text-white px-4 py-3 text-sm focus:border-industrial-amber focus:outline-none transition-colors appearance-none"
                     >
                       <option value="">Select a service</option>
@@ -223,8 +216,6 @@ export default function Contact() {
                     <textarea
                       name="message"
                       rows={4}
-                      value={formData.message}
-                      onChange={handleChange}
                       className="w-full bg-graphite border border-graphite text-white px-4 py-3 text-sm focus:border-industrial-amber focus:outline-none transition-colors resize-none"
                       placeholder="Tell us about your freight needs..."
                     />
@@ -232,9 +223,10 @@ export default function Contact() {
 
                   <button
                     type="submit"
-                    className="w-full mt-6 bg-industrial-amber text-white py-4 font-body text-sm font-semibold uppercase tracking-wider hover:glow-amber transition-all duration-300"
+                    disabled={submitting}
+                    className="w-full mt-6 bg-industrial-amber text-white py-4 font-body text-sm font-semibold uppercase tracking-wider hover:glow-amber transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Request Quote
+                    {submitting ? 'Sending...' : 'Request Quote'}
                   </button>
 
                   <p className="mt-4 text-center text-silver text-xs">
